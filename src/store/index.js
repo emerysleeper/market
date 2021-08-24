@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import fakexios from "@/store/modules/fakexios";
+import fakexios from "@/store/services/fakexios";
 
 const createError = (source, err) => {
   console.groupCollapsed('Errors')
@@ -15,7 +15,13 @@ export default new Vuex.Store({
     nameDatabase: {},
     goodsDatabase: [],
     pollInterval: 15,
-    dollarToRuble: 80
+    dollarToRuble: 80,
+    basket: []
+  },
+  getters: {
+    getCurGoods: state => state.curGoods,
+    getBasket: state => state.basket,
+    getDollarCourse: state => state.dollarToRuble
   },
   mutations: {
     SET_GOODS_DATABASE(state, payload) {
@@ -26,8 +32,13 @@ export default new Vuex.Store({
       Object.assign(state.nameDatabase, payload)
     },
     SET_CURRENT_DATABASE(state, payload) {
-      console.log(payload)
       state.curGoods = payload
+    },
+    ADD_ITEM_TO_BASKET(state, payload) {
+      state.basket.push(payload)
+    },
+    DELETE_ITEM_FROM_BASKET(state, payload) {
+      state.basket.splice(payload, 1)
     }
   },
   actions: {
@@ -87,12 +98,31 @@ export default new Vuex.Store({
           current[newGood.groupName].push(newGood)
         } else {
           current[newGood.groupName] = []
-          current[newGood.groupName] = newGood.groupName
           current[newGood.groupName].push(newGood)
         }
       }
-      console.log(current)
       commit('SET_CURRENT_DATABASE', current)
+    },
+    addToBasket({ state, commit }, payload) {
+      //Check if we have already added the good to basket
+      for (let good of state.basket) {
+        if (good.itemId === payload.id) {
+          return false
+        }
+      }
+      //If we haven't add the good, then add it from the existing list of good by id search
+      for (let good of state.curGoods[payload.name]) {
+        if (good.itemId === payload.id) {
+          commit('ADD_ITEM_TO_BASKET', good)
+        }
+      }
+    },
+    deleteFromBasket({ state, commit }, payload) {
+      for (let num in state.basket) {
+        if (state.basket[num].itemId === payload) {
+          commit('DELETE_ITEM_FROM_BASKET', num)
+        }
+      }
     }
   },
   modules: {
