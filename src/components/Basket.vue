@@ -17,9 +17,7 @@
           <p>Цена - {{ good.price }} </p>
           <p>Количество - {{ good.quantity }} </p>
         </div>
-        <div>
-          <input v-model="quantity" />
-        </div>
+        <Amount :amount="good.amount" :id="i" />
         <div
             class="basket__delete"
             @click="deleteFromBasket(good.itemId)"
@@ -34,12 +32,16 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import Amount from "@/components/Amount";
 export default {
   name: 'Goods',
+  components: {
+    Amount
+  },
   methods: {
     ...mapActions({
       deleteFromBasket: 'deleteFromBasket'
-    })
+    }),
   },
   computed: {
     ...mapGetters({

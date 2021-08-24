@@ -39,6 +39,9 @@ export default new Vuex.Store({
     },
     DELETE_ITEM_FROM_BASKET(state, payload) {
       state.basket.splice(payload, 1)
+    },
+    CHANGE_AMOUNT(state, payload) {
+      state.basket[payload.id].amount = parseInt(payload.amount, 10)
     }
   },
   actions: {
@@ -113,7 +116,10 @@ export default new Vuex.Store({
       //If we haven't add the good, then add it from the existing list of good by id search
       for (let good of state.curGoods[payload.name]) {
         if (good.itemId === payload.id) {
-          commit('ADD_ITEM_TO_BASKET', good)
+          const item = {}
+          Object.assign(item, good)
+          item.amount = 1
+          commit('ADD_ITEM_TO_BASKET', item)
         }
       }
     },
@@ -122,6 +128,14 @@ export default new Vuex.Store({
         if (state.basket[num].itemId === payload) {
           commit('DELETE_ITEM_FROM_BASKET', num)
         }
+      }
+    },
+    changeAmount({ state, commit }, payload) {
+      if(parseInt(payload.amount, 10) === 0 || payload.amount > state.basket[payload.id].quantity) {
+        commit('CHANGE_AMOUNT', { id: payload.id, amount: 1 })
+        // return false
+      } else {
+        commit('CHANGE_AMOUNT', payload)
       }
     }
   },
