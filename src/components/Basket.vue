@@ -13,8 +13,8 @@
           <p>Название - {{ good.itemName }} </p>
         </div>
         <div class="basket__info">
-          <p>Цена - {{ good.price | dollarToRuble(dollarCourse) }} </p>
-          <p>Цена - {{ good.price }} </p>
+          <p>Цена/шт - {{ good.price | dollarToRuble(dollarCourse) }} р </p>
+          <p>Цена за {{ good.amount }} шт. - {{ good.price * good.amount | dollarToRuble(dollarCourse) }} р </p>
           <p>Количество - {{ good.quantity }} </p>
         </div>
         <Amount :amount="good.amount" :id="i" />
@@ -23,6 +23,12 @@
             @click="deleteFromBasket(good.itemId)"
         >
           <p>Удалить из корзины</p>
+        </div>
+      </div>
+      <div class="basket__total">
+        <p>Итоговая цена: {{ total }} рублей</p>
+        <div class="basket__buy">
+          <p>Купить</p>
         </div>
       </div>
     </div>
@@ -34,20 +40,32 @@
 import { mapGetters, mapActions } from 'vuex'
 import Amount from "@/components/Amount";
 export default {
-  name: 'Goods',
+  name: 'Basket',
   components: {
     Amount
   },
   methods: {
     ...mapActions({
       deleteFromBasket: 'deleteFromBasket'
-    }),
+    })
   },
   computed: {
     ...mapGetters({
       basket: 'getBasket',
       dollarCourse: 'getDollarCourse'
-    })
+    }),
+    total () {
+      if (this.basket.length) {
+        let sum = 0
+        for (let i in this.basket) {
+          sum += this.basket[i].amount * (Math.round(((this.basket[i].price * this.dollarCourse) + Number.EPSILON) * 100) / 100)
+        }
+
+        return sum
+      } else {
+        return 0
+      }
+    }
   },
   filters: {
     dollarToRuble (dollar, course) {
@@ -65,7 +83,6 @@ export default {
 
   &__block {
     display: flex;
-    flex-direction: column;
     width: fit-content;
   }
 
@@ -90,6 +107,22 @@ export default {
     p {
       user-select: none;
     }
+  }
+
+  &__total {
+    display: flex;
+    width: 1000px;
+    justify-content: space-between;
+  }
+
+  &__buy {
+    width: 100px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: grey;
+    cursor: pointer;
   }
 }
 </style>

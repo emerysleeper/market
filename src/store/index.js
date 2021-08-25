@@ -47,9 +47,10 @@ export default new Vuex.Store({
   actions: {
     // Start the whole program internally
     async jumpStart ({ dispatch }) {
+      // dispatch('compileGoods')
       await dispatch('getGoods')
       await dispatch('getNames')
-      dispatch('compileGoods')
+      dispatch('startTimer', 5)
     },
     //Get the goods themselves
     async getGoods ({ commit }) {
@@ -137,6 +138,12 @@ export default new Vuex.Store({
       } else {
         commit('CHANGE_AMOUNT', payload)
       }
+    },
+    startTimer({ dispatch }, payload) {
+      setInterval(async () => {
+        await dispatch('getGoods')
+        await dispatch('getNames')
+      }, payload * 1000)
     }
   },
   modules: {
