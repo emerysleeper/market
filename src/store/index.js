@@ -14,7 +14,7 @@ export default new Vuex.Store({
     curGoods: {},
     nameDatabase: {},
     goodsDatabase: [],
-    pollInterval: 15,
+    pollInterval: 5,
     dollarToRuble: 80,
     basket: []
   },
@@ -52,11 +52,11 @@ export default new Vuex.Store({
   },
   actions: {
     // Start the whole program internally
-    async jumpStart ({ dispatch }) {
+    async jumpStart ({ state, dispatch }) {
       await dispatch('getGoods')
       await dispatch('getNames')
       dispatch('compileGoods')
-      dispatch('startTimer', 15)
+      dispatch('startTimer', state.pollInterval)
     },
     startTimer({ dispatch }, payload) {
       setInterval(async () => {
@@ -173,7 +173,7 @@ export default new Vuex.Store({
       }
     },
     changeDollarCourse({ commit }) {
-      const newDollarCourse = (Math.round(Math.random() * 6000) / 100) + 20
+      const newDollarCourse = parseFloat(((Math.round(Math.random() * 6000) / 100) + 20).toFixed(2))
       commit('SET_DOLLAR_COURSE', newDollarCourse)
     }
   },

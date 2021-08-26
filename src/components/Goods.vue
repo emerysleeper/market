@@ -52,7 +52,7 @@ export default {
   },
   filters: {
     dollarToRuble (dollar, course) {
-      return Math.round(((dollar * course) + Number.EPSILON) * 100) / 100
+      return parseFloat((Math.round((dollar * course) * 100) / 100).toFixed(2))
       // return dollar
     }
   }

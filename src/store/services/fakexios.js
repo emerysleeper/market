@@ -1,15 +1,15 @@
-const data = require('@/assets/data.json')
-const names = require('@/assets/names.json')
+
 
 
 
 
 const fakexios = {
-    //Function for imitating async request for distant source
-    //Maybe we've got database on some other continent
+    // Function for imitating additional async request for distant source
+    // Maybe we've got database on some other continent;
+    // Increase the timeout to wait more
     awaiting: async (file) => {
         return new Promise((resolve, reject) => {
-            if(data.Success) {
+            if(file) {
                 setTimeout(() => {
                     resolve(file)
                 }, 100)
@@ -19,11 +19,27 @@ const fakexios = {
 
         })
     },
+    // Fetching files; of course you can REQUIRE a file from internal folder, but what if the file somewhere on the web?
+    // Also, fetch returns a promise, which is quite close to the reql situation
+    getFile: async (filename) => {
+        const result = await fetch(`http://localhost:8080/${filename}.json`)
+            .then( res => {
+                if(!res.ok) {
+                    throw new Error('File cannot be fetched')
+                } else {
+                    return res.json()
+                }
+            })
+            .catch( (e) => {
+                console.log(e)
+            })
+        return await fakexios.awaiting(result)
+    },
     get: async (address) => {
         if (address === '/goods') {
-            return await fakexios.awaiting(data)
+            return await fakexios.getFile('data')
         } else if (address === '/names') {
-            return await fakexios.awaiting(names)
+            return await fakexios.getFile('names')
         } else {
             throw new Error('404 No address found')
         }

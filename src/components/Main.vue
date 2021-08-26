@@ -1,6 +1,7 @@
 <template>
   <div>
     <p>Main</p>
+    <p>Курс доллара: {{ dollar }}</p>
     <Goods />
     <Basket />
   </div>
@@ -8,7 +9,7 @@
 
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import Goods from "@/components/Goods";
 import Basket from "@/components/Basket";
 export default {
@@ -20,6 +21,11 @@ export default {
   methods: {
     ...mapActions({
       jumpStart: 'jumpStart'
+    })
+  },
+  computed: {
+    ...mapGetters({
+      dollar: 'getDollarCourse'
     })
   },
   created () {
