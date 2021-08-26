@@ -24,7 +24,7 @@
 <script>
 import { mapGetters } from 'vuex'
 
-import Good from "@/components/Good"
+import Good from "@/components/UI/Good"
 export default {
   name: 'Basket',
   components: {

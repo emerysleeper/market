@@ -1,6 +1,6 @@
 <template>
   <div class="goods">
-    <div v-if="goods">
+    <div v-if="Object.keys(goods).length">
       <div
           v-for="(category, i) in Object.keys(goods)"
           :key="i"
@@ -31,14 +31,18 @@
         </div>
       </div>
     </div>
-    <p v-else>Товаров пока нет</p>
+    <Loader v-else />
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import Loader from "@/components/UI/Loader";
 export default {
   name: 'Goods',
+  components: {
+    Loader
+  },
   methods: {
     ...mapActions({
       addToBasket: 'addToBasket'

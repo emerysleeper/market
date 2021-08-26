@@ -1,6 +1,16 @@
 <template>
   <div>
-    <input :value="amount" @keyup="changeAmount($event)"/>
+    <input :value="amount" ref="amount" @keyup="changeAmount($event)"/>
+    <div>
+      <img
+          src="@/assets/arrow-control.svg"
+          @click="addAmount()"
+      />
+      <img
+          src="@/assets/arrow-control.svg"
+          @click="reduceAmount()"
+      />
+    </div>
   </div>
 </template>
 
@@ -36,6 +46,16 @@ export default {
         this.changeGoodAmount({ id: this.id, amount: this.basket[this.id].quantity })
       } else {
         this.changeGoodAmount({ id: this.id, amount: e.target.value })
+      }
+    },
+    addAmount () {
+      if (this.amount < this.basket[this.id].quantity) {
+        this.changeGoodAmount({ id: this.id, amount: this.amount + 1 })
+      }
+    },
+    reduceAmount () {
+      if (this.amount > 1) {
+        this.changeGoodAmount({ id: this.id, amount: this.amount - 1 })
       }
     }
   },

@@ -23,7 +23,7 @@
 
 <script>
 import { mapActions, mapGetters} from 'vuex'
-import Amount from "@/components/Amount";
+import Amount from "@/components/UI/Amount";
 export default {
   name: "Good",
   components: {

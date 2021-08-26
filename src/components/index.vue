@@ -10,8 +10,8 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import Goods from "@/components/Goods";
-import Basket from "@/components/Basket";
+import Goods from "@/components/Main/Goods";
+import Basket from "@/components/Main/Basket";
 export default {
   name: 'Main',
   components: {

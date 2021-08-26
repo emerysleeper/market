@@ -56,6 +56,7 @@ export default new Vuex.Store({
       await dispatch('getGoods')
       await dispatch('getNames')
       dispatch('compileGoods')
+      dispatch('loadBasketFromStorage')
       dispatch('startTimer', state.pollInterval)
     },
     startTimer({ dispatch }, payload) {
@@ -67,6 +68,7 @@ export default new Vuex.Store({
       }, payload * 1000)
     },
     //Get the goods themselves
+    // For the real situation I would "cache" the elements - compare old and new data and not delete the original goods
     async getGoods ({ commit }) {
       try {
         const fetchedData = await fakexios.get('/goods')
@@ -120,7 +122,7 @@ export default new Vuex.Store({
       }
       commit('SET_CURRENT_DATABASE', current)
     },
-    addToBasket({ state, commit }, payload) {
+    addToBasket({ state, commit, dispatch }, payload) {
       //Check if we have already added the good to basket
       for (let good of state.basket) {
         if (good.itemId === payload.id) {
@@ -134,13 +136,15 @@ export default new Vuex.Store({
           Object.assign(item, good)
           item.amount = 1
           commit('ADD_ITEM_TO_BASKET', item)
+          dispatch('refreshLocalStorageBasket')
         }
       }
     },
-    deleteFromBasket({ state, commit }, payload) {
+    deleteFromBasket({ state, commit, dispatch }, payload) {
       for (let num in state.basket) {
         if (state.basket[num].itemId === payload) {
           commit('DELETE_ITEM_FROM_BASKET', num)
+          dispatch('refreshLocalStorageBasket')
         }
       }
     },
@@ -163,6 +167,16 @@ export default new Vuex.Store({
       }
       //When we're done filling the new basket, reassign it, deleting the old one
       commit('SET_NEW_BASKET', newBasket)
+    },
+    loadBasketFromStorage({ commit }) {
+      const basket = JSON.parse(window.localStorage.getItem('basket'))
+      if (basket) {
+        commit('SET_NEW_BASKET', basket)
+      }
+    },
+    refreshLocalStorageBasket({ state }) {
+      window.localStorage.removeItem('basket')
+      window.localStorage.setItem('basket', JSON.stringify(state.basket))
     },
     changeAmount({ state, commit }, payload) {
       if(parseInt(payload.amount, 10) === 0 || payload.amount > state.basket[payload.id].quantity) {
