@@ -173,7 +173,7 @@ export default new Vuex.Store({
       }
     },
     changeDollarCourse({ commit }) {
-      const newDollarCourse = (Math.round(Math.random() * 10000) / 100) - 20
+      const newDollarCourse = (Math.round(Math.random() * 6000) / 100) + 20
       commit('SET_DOLLAR_COURSE', newDollarCourse)
     }
   },
