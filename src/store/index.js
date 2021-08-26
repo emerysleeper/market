@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import fakexios from "@/store/services/fakexios";
+import popup from '@/store/popup'
 
 const createError = (source, err) => {
   console.groupCollapsed('Errors')
@@ -14,7 +15,8 @@ export default new Vuex.Store({
     curGoods: {},
     nameDatabase: {},
     goodsDatabase: [],
-    pollInterval: 5,
+    pollInterval: 4,
+    interval: null,
     dollarToRuble: 80,
     basket: []
   },
@@ -48,24 +50,39 @@ export default new Vuex.Store({
     },
     SET_DOLLAR_COURSE(state, payload) {
       state.dollarToRuble = payload
+    },
+    SET_POLL_INTERVAL(state, payload) {
+      state.pollInterval = payload
+    },
+    SET_INTERVAL_FUNCTION(state, payload) {
+      console.log(payload)
+      state.interval = payload
     }
   },
   actions: {
     // Start the whole program internally
-    async jumpStart ({ state, dispatch }) {
+    async jumpStart ({ dispatch, state }) {
       await dispatch('getGoods')
       await dispatch('getNames')
       dispatch('compileGoods')
       dispatch('loadBasketFromStorage')
       dispatch('startTimer', state.pollInterval)
+      return true
     },
-    startTimer({ dispatch }, payload) {
-      setInterval(async () => {
+    startTimer({ commit, dispatch }, payload) {
+      const interval = setInterval(async () => {
         await dispatch('getGoods')
         dispatch('compileGoods')
         dispatch('recompileTheBasket')
         dispatch('changeDollarCourse')
       }, payload * 1000)
+      commit('SET_INTERVAL_FUNCTION', interval)
+    },
+    async restartTimer({ dispatch, state, commit }, payload) {
+      clearInterval(state.interval)
+      commit('SET_POLL_INTERVAL', payload)
+      await dispatch('jumpStart')
+      return true
     },
     //Get the goods themselves
     // For the real situation I would "cache" the elements - compare old and new data and not delete the original goods
@@ -186,11 +203,21 @@ export default new Vuex.Store({
         commit('CHANGE_AMOUNT', payload)
       }
     },
-    changeDollarCourse({ commit }) {
-      const newDollarCourse = parseFloat(((Math.round(Math.random() * 6000) / 100) + 20).toFixed(2))
-      commit('SET_DOLLAR_COURSE', newDollarCourse)
+    changeDollarCourse({ commit }, payload) {
+      if (payload) {
+        if (20 <= payload <= 80) {
+          commit('SET_DOLLAR_COURSE', payload)
+        } else {
+          const newDollarCourse = parseFloat(((Math.round(Math.random() * 6000) / 100) + 20).toFixed(2))
+          commit('SET_DOLLAR_COURSE', newDollarCourse)
+        }
+      } else {
+        const newDollarCourse = parseFloat(((Math.round(Math.random() * 6000) / 100) + 20).toFixed(2))
+        commit('SET_DOLLAR_COURSE', newDollarCourse)
+      }
     }
   },
   modules: {
+    popup
   }
 })

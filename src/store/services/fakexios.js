@@ -12,7 +12,7 @@ const fakexios = {
             if(file) {
                 setTimeout(() => {
                     resolve(file)
-                }, 2000)
+                }, 200)
             } else {
                 reject()
             }

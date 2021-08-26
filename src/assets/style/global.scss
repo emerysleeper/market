@@ -1,0 +1,13 @@
+.button {
+  width: 120px;
+  height: 40px;
+  background-color: grey;
+  border: 2px solid black;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  p {
+    user-select: none;
+  }
+}

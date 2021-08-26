@@ -1,6 +1,11 @@
 <template>
-  <div>
-    <p>Main</p>
+  <div class="main">
+    <div
+        class="main__settings button"
+        @click="setPopupMode('Settings')"
+    >
+      <p>Настройки</p>
+    </div>
     <p>Курс доллара: {{ dollar }}</p>
     <Goods />
     <Basket />
@@ -21,6 +26,9 @@ export default {
   methods: {
     ...mapActions({
       jumpStart: 'jumpStart'
+    }),
+    ...mapActions('popup', {
+      setPopupMode: 'setPopupMode'
     })
   },
   computed: {
