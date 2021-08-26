@@ -40,17 +40,31 @@ export default new Vuex.Store({
     DELETE_ITEM_FROM_BASKET(state, payload) {
       state.basket.splice(payload, 1)
     },
+    SET_NEW_BASKET(state, payload) {
+      state.basket = payload
+    },
     CHANGE_AMOUNT(state, payload) {
       state.basket[payload.id].amount = parseInt(payload.amount, 10)
+    },
+    SET_DOLLAR_COURSE(state, payload) {
+      state.dollarToRuble = payload
     }
   },
   actions: {
     // Start the whole program internally
     async jumpStart ({ dispatch }) {
-      // dispatch('compileGoods')
       await dispatch('getGoods')
       await dispatch('getNames')
-      dispatch('startTimer', 5)
+      dispatch('compileGoods')
+      dispatch('startTimer', 15)
+    },
+    startTimer({ dispatch }, payload) {
+      setInterval(async () => {
+        await dispatch('getGoods')
+        dispatch('compileGoods')
+        dispatch('recompileTheBasket')
+        dispatch('changeDollarCourse')
+      }, payload * 1000)
     },
     //Get the goods themselves
     async getGoods ({ commit }) {
@@ -67,7 +81,6 @@ export default new Vuex.Store({
         createError("getGoods", e)
       }
     },
-
     //Get the names database
     async getNames ({ commit }) {
       try {
@@ -131,6 +144,26 @@ export default new Vuex.Store({
         }
       }
     },
+    //This function is required for cases, when after going into data.json we have something changed.
+    //Item ID won't likely change, so I assume we just get all the new data again by ID
+    recompileTheBasket({ state, commit }) {
+      const oldBasket = state.basket
+      const newBasket = []
+      //For every good that is in the basket...
+      for (let basketGood in oldBasket) {
+        //We search the corresponding good and push it to the new basket (search in the same category)
+        for (let listedGood of state.curGoods[oldBasket[basketGood].groupName]) {
+          if (listedGood.itemId === oldBasket[basketGood].itemId) {
+            const item = {}
+            Object.assign(item, listedGood)
+            item.amount = oldBasket[basketGood].amount
+            newBasket.push(item)
+          }
+        }
+      }
+      //When we're done filling the new basket, reassign it, deleting the old one
+      commit('SET_NEW_BASKET', newBasket)
+    },
     changeAmount({ state, commit }, payload) {
       if(parseInt(payload.amount, 10) === 0 || payload.amount > state.basket[payload.id].quantity) {
         commit('CHANGE_AMOUNT', { id: payload.id, amount: 1 })
@@ -139,11 +172,9 @@ export default new Vuex.Store({
         commit('CHANGE_AMOUNT', payload)
       }
     },
-    startTimer({ dispatch }, payload) {
-      setInterval(async () => {
-        await dispatch('getGoods')
-        await dispatch('getNames')
-      }, payload * 1000)
+    changeDollarCourse({ commit }) {
+      const newDollarCourse = (Math.round(Math.random() * 10000) / 100) - 20
+      commit('SET_DOLLAR_COURSE', newDollarCourse)
     }
   },
   modules: {

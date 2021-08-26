@@ -58,10 +58,9 @@ export default {
       if (this.basket.length) {
         let sum = 0
         for (let i in this.basket) {
-          sum += this.basket[i].amount * (Math.round(((this.basket[i].price * this.dollarCourse) + Number.EPSILON) * 100) / 100)
+          sum += this.basket[i].amount * this.basket[i].price
         }
-
-        return sum
+        return  (Math.round((sum * this.dollarCourse) * 100) / 100)
       } else {
         return 0
       }
@@ -69,7 +68,7 @@ export default {
   },
   filters: {
     dollarToRuble (dollar, course) {
-      return Math.round(((dollar * course) + Number.EPSILON) * 100) / 100
+      return Math.round((dollar * course) * 100) / 100
       // return dollar
     }
   }
