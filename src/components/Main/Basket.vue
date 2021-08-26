@@ -9,6 +9,7 @@
           :key="i"
           :good="good"
           :id="i"
+          mode="basket"
       />
       <div class="basket__total">
         <p>Итоговая цена: {{ total }} рублей</p>
@@ -23,7 +24,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-
 import Good from "@/components/UI/Good"
 export default {
   name: 'Basket',

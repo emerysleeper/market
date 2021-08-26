@@ -9,26 +9,12 @@
         <div class="goods__category">
           {{ category }}
         </div>
-        <div
-            v-for="good in goods[category]"
-            :key="good.itemId"
-            class="goods__good"
-        >
-          <div class="goods__name">
-            <p>Название - {{ good.itemName }} </p>
-          </div>
-          <div class="goods__info">
-            <p>Цена - {{ good.price | dollarToRuble(dollarCourse) }} </p>
-            <p>Цена - {{ good.price }} </p>
-            <p>Количество - {{ good.quantity }} </p>
-          </div>
-          <div
-              class="goods__add"
-              @click="addToBasket({ name: good.groupName, id: good.itemId })"
-          >
-            <p>Добавить в корзину</p>
-          </div>
-        </div>
+        <Good
+            v-for="(good, i) in goods[category]"
+            :key="i"
+            :good="good"
+            :id="i"
+        />
       </div>
     </div>
     <Loader v-else />
@@ -36,17 +22,14 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 import Loader from "@/components/UI/Loader";
+import Good from "@/components/UI/Good"
 export default {
   name: 'Goods',
   components: {
+    Good,
     Loader
-  },
-  methods: {
-    ...mapActions({
-      addToBasket: 'addToBasket'
-    })
   },
   computed: {
     ...mapGetters({

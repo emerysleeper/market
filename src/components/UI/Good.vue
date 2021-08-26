@@ -1,11 +1,13 @@
 <template>
   <div
       class="good"
-      :class="`good--${priceClass}`"
+      :class="{ priceClass : mode === 'basket'}"
   >
       <div class="good__name">
         <p>Название - {{ good.itemName }} </p>
       </div>
+<!--    Вид товаров для корзины -->
+    <div v-if="mode === 'basket'">
       <div class="good__info">
         <p>Цена/шт - {{ rublePrice }} р </p>
         <p>Цена за {{ good.amount }} шт. - {{ rublePrice * good.amount  }} р </p>
@@ -13,11 +15,26 @@
       </div>
       <Amount :amount="good.amount" :id="id" />
       <div
+
           class="good__delete"
           @click="deleteFromBasket(good.itemId)"
       >
         <p>Удалить из корзины</p>
       </div>
+    </div>
+<!--    Вид товара для списка товаров -->
+    <div v-else>
+      <div class="goods__info">
+        <p>Цена - {{ good.price | dollarToRuble(dollarCourse) }} </p>
+        <p>Количество - {{ good.quantity }} </p>
+      </div>
+      <div
+          class="goods__add"
+          @click="addToBasket({ name: good.groupName, id: good.itemId })"
+      >
+        <p>Добавить в корзину</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -42,6 +59,11 @@ export default {
     id: {
       type: Number,
       required: true
+    },
+    mode: {
+      type: String,
+      required: false,
+      default: 'default'
     }
   },
   computed: {
@@ -54,7 +76,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      deleteFromBasket: 'deleteFromBasket'
+      deleteFromBasket: 'deleteFromBasket',
+      addToBasket: 'addToBasket'
     })
   },
   // DO NOTE! All this is installed to watch THE END PRICE, not the dollar course or dollar price;
@@ -85,13 +108,13 @@ export default {
 .good {
   display: flex;
   width: 1500px;
-  &--red {
+  &.red {
     background-color: lightpink;
   }
-  &--green {
+  &.green {
     background-color: lightgreen;
   }
-  &--neutral {
+  &.neutral {
     background-color: transparent;
   }
   &__info {
