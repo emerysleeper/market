@@ -53,6 +53,7 @@ export default {
         this.changeGoodAmount({ id: this.id, amount: e.target.value })
       }
     },
+    // Functions for arrows, won't allow wrong value
     addAmount () {
       if (this.amount < this.basket[this.id].quantity) {
         this.changeGoodAmount({ id: this.id, amount: this.amount + 1 })

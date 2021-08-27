@@ -1,6 +1,6 @@
 
 
-
+// Fakexios - fake axios, imitates axios library for async requests with fetch inside
 
 
 const fakexios = {
@@ -12,7 +12,7 @@ const fakexios = {
             if(file) {
                 setTimeout(() => {
                     resolve(file)
-                }, 1500)
+                }, 500)
             } else {
                 reject()
             }
@@ -35,6 +35,7 @@ const fakexios = {
             })
         return await fakexios.awaiting(result)
     },
+    //Get routes
     get: async (address) => {
         if (address === '/goods') {
             return await fakexios.getFile('data')

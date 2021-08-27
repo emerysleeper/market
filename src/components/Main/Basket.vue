@@ -40,6 +40,7 @@ export default {
       basket: 'getBasket',
       dollarCourse: 'getDollarCourse'
     }),
+    // Total sum of all goods, will change with the prices
     total () {
       if (this.basket.length) {
         let sum = 0
@@ -57,6 +58,8 @@ export default {
       setSum: 'setSum',
       setPopupMode: 'setPopupMode'
     }),
+    // ATTENTION! It will set the current sum. The customer will buy things with
+    // the prices they had at the moment he pushed the button
     buy () {
       if (this.total !== 0) {
         this.setSum(this.total)

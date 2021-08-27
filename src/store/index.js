@@ -15,7 +15,7 @@ export default new Vuex.Store({
     curGoods: {},
     nameDatabase: {},
     goodsDatabase: [],
-    pollInterval: 4,
+    pollInterval: 15,
     interval: null,
     dollarToRuble: 80,
     basket: []
@@ -77,6 +77,8 @@ export default new Vuex.Store({
       }, payload * 1000)
       commit('SET_INTERVAL_FUNCTION', interval)
     },
+
+    //Restarting timer when the poll time is changed in the settings
     restartTimer({ dispatch, state, commit }, payload) {
       clearInterval(state.interval)
       commit('SET_POLL_INTERVAL', payload)

@@ -1,11 +1,8 @@
-$mainColor: #2a4e75;
-$contrastColor: #ffbf1b;
-
 .button {
   width: fit-content;
   height: fit-content;
   padding: 5px 10px;
-  background-color: $contrastColor;
+  background-color: #ffbf1b;
   border-radius: 5px;
   cursor: pointer;
   display: flex;

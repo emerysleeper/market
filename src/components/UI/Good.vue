@@ -72,6 +72,7 @@ export default {
     ...mapGetters({
       dollarCourse: 'getDollarCourse'
     }),
+    //Turning price to rubles, also making sure it won't be something like 1.00000000004
     rublePrice () {
       return parseFloat((Math.round((this.good.price * this.dollarCourse) * 100) / 100).toFixed(2))
     }
