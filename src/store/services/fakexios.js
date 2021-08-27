@@ -12,7 +12,7 @@ const fakexios = {
             if(file) {
                 setTimeout(() => {
                     resolve(file)
-                }, 200)
+                }, 1500)
             } else {
                 reject()
             }
@@ -44,6 +44,7 @@ const fakexios = {
             throw new Error('404 No address found')
         }
     },
+    // Just in case we would need to simulate a "Post" request
     post: async (address, data) => {
         console.table(data)
         if (address === '/goods') {

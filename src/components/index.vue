@@ -1,12 +1,16 @@
 <template>
   <div class="main">
-    <div
-        class="main__settings button"
-        @click="setPopupMode('Settings')"
-    >
-      <p>Настройки</p>
+    <div class="main__header">
+      <div class="banner">
+        <p>Курс доллара: {{ dollar }}</p>
+      </div>
+      <div
+          class="button"
+          @click="setPopupMode('Settings')"
+      >
+        <p>Настройки</p>
+      </div>
     </div>
-    <p>Курс доллара: {{ dollar }}</p>
     <Goods />
     <Basket />
   </div>
@@ -41,3 +45,27 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.main {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 100px 0;
+  width: 100%;
+
+  &__header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background-color: #2a4e75;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 100px;
+  }
+}
+</style>

@@ -1,10 +1,10 @@
 <template>
-  <div>
-    <div>
+  <div class="settings">
+    <div class="settings__block">
       <p>Установить курс доллара вручную</p>
       <input v-model="dollar" />
     </div>
-    <div>
+    <div class="settings__block">
       <p>Установить новый интервал обновлений</p>
       <input v-model="interval" />
     </div>
@@ -37,9 +37,27 @@ export default {
     }),
     async setSettings () {
       this.changeDollarCourse(this.dollar)
-      await this.restartTimer(this.interval)
+      this.restartTimer(this.interval)
       this.setPopupMode(null)
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.settings {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+
+  &__block {
+    margin-bottom: 20px;
+    p {
+      margin: 5px 0;
+    }
+  }
+}
+
+</style>

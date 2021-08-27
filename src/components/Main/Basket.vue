@@ -1,9 +1,9 @@
 <template>
   <div class="basket">
-    <div>
+    <div class="banner">
       <p>Корзина товаров</p>
     </div>
-    <div v-if="basket">
+    <div v-if="basket.length">
       <Good
           v-for="(good, i) in basket"
           :key="i"
@@ -11,19 +11,24 @@
           :id="i"
           mode="basket"
       />
-      <div class="basket__total">
-        <p>Итоговая цена: {{ total }} рублей</p>
-        <div class="basket__buy">
+      <div class="basket__bottom">
+        <div class="banner">
+          <p>Итоговая цена: {{ total }} рублей</p>
+        </div>
+        <div
+            @click="buy"
+            class="basket__buy button"
+        >
           <p>Купить</p>
         </div>
       </div>
     </div>
-    <p v-else>Товаров пока нет</p>
+    <p v-else class="banner">Товаров пока нет</p>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import Good from "@/components/UI/Good"
 export default {
   name: 'Basket',
@@ -41,9 +46,21 @@ export default {
         for (let i in this.basket) {
           sum += this.basket[i].amount * this.basket[i].price
         }
-        return  (Math.round((sum * this.dollarCourse) * 100) / 100).toFixed(2)
+        return (Math.round((sum * this.dollarCourse) * 100) / 100).toFixed(2)
       } else {
         return 0
+      }
+    }
+  },
+  methods: {
+    ...mapActions('popup', {
+      setSum: 'setSum',
+      setPopupMode: 'setPopupMode'
+    }),
+    buy () {
+      if (this.total !== 0) {
+        this.setSum(this.total)
+        this.setPopupMode('Buy')
       }
     }
   }
@@ -53,7 +70,18 @@ export default {
 <style lang="scss" scoped>
 .basket {
   display: flex;
+  width: 1200px;
   flex-direction: column;
+  background-color: #ffcf96;
+  padding: 20px;
+  border-radius: 10px;
+
+  .banner {
+    font-size: 25px;
+    font-weight: bold;
+    color: #2a4e75;
+    margin-bottom: 20px;
+  }
 
   &__total {
     display: flex;
@@ -61,14 +89,15 @@ export default {
     justify-content: space-between;
   }
 
-  &__buy {
-    width: 100px;
-    height: 40px;
+  &__bottom {
+    height: 50px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    background-color: grey;
-    cursor: pointer;
+
+    .banner {
+      margin: 0;
+    }
   }
 }
 </style>

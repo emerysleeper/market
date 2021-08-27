@@ -1,12 +1,15 @@
 <template>
   <div class="goods">
-    <div v-if="Object.keys(goods).length">
+    <div
+        class="goods__container"
+        v-if="Object.keys(goods).length"
+    >
       <div
           v-for="(category, i) in Object.keys(goods)"
           :key="i"
           class="goods__block"
       >
-        <div class="goods__category">
+        <div class="goods__category banner">
           {{ category }}
         </div>
         <Good
@@ -17,7 +20,9 @@
         />
       </div>
     </div>
-    <Loader v-else />
+    <Loader
+        v-else
+    />
   </div>
 </template>
 
@@ -36,12 +41,6 @@ export default {
       goods: 'getCurGoods',
       dollarCourse: 'getDollarCourse'
     })
-  },
-  filters: {
-    dollarToRuble (dollar, course) {
-      return parseFloat((Math.round((dollar * course) * 100) / 100).toFixed(2))
-      // return dollar
-    }
   }
 }
 </script>
@@ -49,44 +48,37 @@ export default {
 <style lang="scss" scoped>
 .goods {
   display: flex;
+  width: 1200px;
+
+  &__container {
+    width: 100%;
+    opacity: 1;
+    transition: all 5s ease-in-out;
+  }
 
   &__block {
+    width: 100%;
+    margin: 10px 0;
+    border-radius: 10px;
     display: flex;
     flex-direction: column;
-    width: fit-content;
+    background-color: #e4e8ea;
+    padding: 20px;
   }
 
   &__category {
-    color: red;
+    font-size: 20px;
+    font-weight: bold;
   }
 
-  &__good {
-    display: flex;
+  &__loader {
     width: 100%;
-    justify-content: space-between;
-  }
-
-  &__name {
-    width: 400px;
-  }
-
-  &__info {
-    width: 400px;
-    display: flex;
-    justify-content: space-between;
-  }
-
-  &__add {
-    width: 180px;
-    height: 40px;
+    background-color: white;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: grey;
-    cursor: pointer;
-    p {
-      user-select: none;
-    }
   }
 }
+
+
 </style>

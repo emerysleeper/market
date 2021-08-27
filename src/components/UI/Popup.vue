@@ -12,10 +12,16 @@
 <script>
 import { mapActions } from 'vuex'
 import Settings from '@/components/Popup/Settings'
+import Buy from '@/components/Popup/Buy'
+import Delete from '@/components/Popup/Delete'
+import Success from '@/components/Popup/Success'
 export default {
   name: 'Popup',
   components: {
-    Settings
+    Settings,
+    Buy,
+    Delete,
+    Success
   },
   props: {
     mode: {
@@ -45,7 +51,7 @@ export default {
   align-items: center;
   &__main {
     width: 500px;
-    height: 500px;
+    height: fit-content;
     background-color: white;
   }
 }

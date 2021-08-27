@@ -1,6 +1,8 @@
 <template>
   <div class="loader">
-    <img src="@/assets/loading.svg" />
+    <div class="loader__container">
+      <img src="@/assets/loading.svg" />
+    </div>
   </div>
 </template>
 
@@ -12,14 +14,26 @@ export default {
 
 <style lang="scss" scoped>
 .loader {
-  width: 50px;
-  height: 50px;
-  background-color: aqua;
-  border-radius: 100%;
-  img {
-    width: 50px;
-    height: 50px;
-    animation: rotation .7s infinite linear;
+  width: 100%;
+  height: 300px;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &__container {
+    width: 80px;
+    height: 80px;
+    background-color: mediumseagreen;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      width: 50px;
+      height: 50px;
+      animation: rotation .7s infinite linear;
+    }
   }
 }
 

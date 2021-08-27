@@ -1,38 +1,40 @@
 <template>
   <div
       class="good"
-      :class="{ priceClass : mode === 'basket'}"
+      :class="priceClass"
   >
       <div class="good__name">
-        <p>Название - {{ good.itemName }} </p>
+        <p>{{ good.itemName }} </p>
       </div>
 <!--    Вид товаров для корзины -->
-    <div v-if="mode === 'basket'">
-      <div class="good__info">
+    <div
+        v-if="mode === 'basket'"
+        class="good__info"
+    >
         <p>Цена/шт - {{ rublePrice }} р </p>
-        <p>Цена за {{ good.amount }} шт. - {{ rublePrice * good.amount  }} р </p>
+        <p v-show="good.amount > 1">Цена за {{ good.amount }} шт. - {{ rublePrice * good.amount | fixedNum }} р </p>
         <p>Количество - {{ good.quantity }} </p>
-      </div>
       <Amount :amount="good.amount" :id="id" />
       <div
 
-          class="good__delete"
-          @click="deleteFromBasket(good.itemId)"
+          class="button"
+          @click="deleteGood(id)"
       >
         <p>Удалить из корзины</p>
       </div>
     </div>
 <!--    Вид товара для списка товаров -->
-    <div v-else>
-      <div class="goods__info">
-        <p>Цена - {{ good.price | dollarToRuble(dollarCourse) }} </p>
-        <p>Количество - {{ good.quantity }} </p>
-      </div>
+    <div
+        v-else
+        class="good__info"
+    >
+      <p>Цена - {{ good.price | dollarToRuble(dollarCourse) }} </p>
+      <p>Количество - {{ good.quantity }} </p>
       <div
-          class="goods__add"
+          class="good__add button"
           @click="addToBasket({ name: good.groupName, id: good.itemId })"
       >
-        <p>Добавить в корзину</p>
+        <p>В корзину</p>
       </div>
     </div>
   </div>
@@ -78,7 +80,15 @@ export default {
     ...mapActions({
       deleteFromBasket: 'deleteFromBasket',
       addToBasket: 'addToBasket'
-    })
+    }),
+    ...mapActions('popup', {
+      setPopupMode: 'setPopupMode',
+      setItemToDelete: 'setItemToDelete'
+    }),
+    deleteGood (id) {
+      this.setItemToDelete(id)
+      this.setPopupMode('Delete')
+    }
   },
   // DO NOTE! All this is installed to watch THE END PRICE, not the dollar course or dollar price;
   // Therefore you can change the real price in dollars, and it depending on the new price and dollar course
@@ -86,19 +96,16 @@ export default {
   watch: {
     rublePrice: {
       handler (newVal, oldVal) {
-        if(newVal > oldVal) {
-          this.priceClass = 'red'
-        } else if (oldVal > newVal) {
-          this.priceClass = 'green'
-        } else {
-          this.priceClass = 'neutral'
+        if (this.mode === 'basket') {
+          if(newVal > oldVal) {
+            this.priceClass = 'red'
+          } else if (oldVal > newVal) {
+            this.priceClass = 'green'
+          } else {
+            this.priceClass = 'neutral'
+          }
         }
       }
-    }
-  },
-  filters: {
-    dollarToRuble (dollar, course) {
-      return parseFloat((Math.round((dollar * course) * 100) / 100).toFixed(2))
     }
   }
 }
@@ -107,7 +114,10 @@ export default {
 <style lang="scss" scoped>
 .good {
   display: flex;
-  width: 1500px;
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  border: 1px solid lightslategrey;
   &.red {
     background-color: lightpink;
   }
@@ -117,10 +127,23 @@ export default {
   &.neutral {
     background-color: transparent;
   }
+
+  &__name {
+    width: 600px;
+    padding: 10px;
+  }
   &__info {
-    width: 400px;
+    border-left: 1px solid black;
+    width: 250px;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: flex-start;
+    padding: 10px;
+
+    p {
+      margin: 3px 0;
+    }
   }
 
   &__delete {

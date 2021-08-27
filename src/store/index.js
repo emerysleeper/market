@@ -55,7 +55,6 @@ export default new Vuex.Store({
       state.pollInterval = payload
     },
     SET_INTERVAL_FUNCTION(state, payload) {
-      console.log(payload)
       state.interval = payload
     }
   },
@@ -78,11 +77,10 @@ export default new Vuex.Store({
       }, payload * 1000)
       commit('SET_INTERVAL_FUNCTION', interval)
     },
-    async restartTimer({ dispatch, state, commit }, payload) {
+    restartTimer({ dispatch, state, commit }, payload) {
       clearInterval(state.interval)
       commit('SET_POLL_INTERVAL', payload)
-      await dispatch('jumpStart')
-      return true
+      dispatch('jumpStart')
     },
     //Get the goods themselves
     // For the real situation I would "cache" the elements - compare old and new data and not delete the original goods
@@ -194,6 +192,10 @@ export default new Vuex.Store({
     refreshLocalStorageBasket({ state }) {
       window.localStorage.removeItem('basket')
       window.localStorage.setItem('basket', JSON.stringify(state.basket))
+    },
+    eraseBasket({ commit, dispatch }) {
+      commit('SET_NEW_BASKET', [])
+      dispatch('refreshLocalStorageBasket')
     },
     changeAmount({ state, commit }, payload) {
       if(parseInt(payload.amount, 10) === 0 || payload.amount > state.basket[payload.id].quantity) {

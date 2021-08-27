@@ -1,13 +1,34 @@
+$mainColor: #2a4e75;
+$contrastColor: #ffbf1b;
+
 .button {
-  width: 120px;
-  height: 40px;
-  background-color: grey;
-  border: 2px solid black;
+  width: fit-content;
+  height: fit-content;
+  padding: 5px 10px;
+  background-color: $contrastColor;
+  border-radius: 5px;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
   p {
     user-select: none;
+    margin: 0;
+  }
+}
+
+.banner {
+  width: fit-content;
+  height: fit-content;
+  padding: 5px 10px;
+  background-color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  p {
+    user-select: none;
+    margin: 0;
   }
 }
